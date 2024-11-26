@@ -43,7 +43,7 @@ open class _InjectableViewControllerHost<Hosted: InjectViewControllerType>: Inje
         super.init(nibName: nil, bundle: nil)
         self.enableInjection()
         
-        addAsChild()
+        setupItems()
         onInjection { [weak self] instance in
             guard let self else { return }
             instance.resetHosted()
@@ -55,6 +55,11 @@ open class _InjectableViewControllerHost<Hosted: InjectViewControllerType>: Inje
         view = InjectViewType(frame: .zero)
     }
     
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        addAsChild()
+    }
+
     private func resetHosted() {
         // remove old vc from child list
 #if canImport(UIKit)
@@ -73,7 +78,20 @@ open class _InjectableViewControllerHost<Hosted: InjectViewControllerType>: Inje
         view.addSubview(instance.view)
 #if canImport(UIKit)
         instance.didMove(toParent: self)
+#endif
         
+        instance.view.translatesAutoresizingMaskIntoConstraints = false
+        [
+            instance.view.topAnchor.constraint(equalTo: view.topAnchor),
+            instance.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            instance.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            instance.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ]
+        .forEach { $0.isActive = true }
+    }
+
+    private func setupItems() {
+#if canImport(UIKit)
         title = instance.title
         tabBarItem = instance.tabBarItem
         definesPresentationContext = instance.definesPresentationContext
@@ -92,15 +110,6 @@ open class _InjectableViewControllerHost<Hosted: InjectViewControllerType>: Inje
         hidesBottomBarWhenPushed = instance.hidesBottomBarWhenPushed
         #endif
 #endif
-        
-        instance.view.translatesAutoresizingMaskIntoConstraints = false
-        [
-            instance.view.topAnchor.constraint(equalTo: view.topAnchor),
-            instance.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            instance.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            instance.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ]
-        .forEach { $0.isActive = true }
     }
     
     @available(*, unavailable)
