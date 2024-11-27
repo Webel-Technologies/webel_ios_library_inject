@@ -30,7 +30,7 @@ public extension InjectListener {
     }
 }
 
-#if DEBUG
+#if !DEBUG
 private var loadInjectionImplementation: Void = {
     guard objc_getClass("InjectionClient") == nil else { return }
     // If project has a "Build Phase" running this script, Inject should

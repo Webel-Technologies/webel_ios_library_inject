@@ -9,7 +9,7 @@ public typealias InjectViewControllerType = NSViewController
 public typealias InjectViewType = NSView
 #endif
 
-#if DEBUG
+#if !DEBUG
 
 public typealias ViewControllerHost = _InjectableViewControllerHost
 public typealias ViewHost = _InjectableViewHost

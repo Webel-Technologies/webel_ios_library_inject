@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 #if !os(watchOS)
-#if DEBUG
+#if !DEBUG
 @available(iOS 13.0, *)
 public extension SwiftUI.View {
     func enableInjection() -> some SwiftUI.View {
